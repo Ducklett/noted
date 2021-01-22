@@ -1,16 +1,16 @@
-# noted
+# Noted
 
-A new Flutter project.
+Notes app made in flutter that works with real text files instead of some internal database.
 
-## Getting Started
+This allows you to sync your notes across devices using a third party service.
 
-This project is a starting point for a Flutter application.
+Only works on android since iOS doesn't allow arbitrary read/writes of the file system.
 
-A few resources to get you started if this is your first Flutter project:
+![Screenshot](./screenshot.jpg)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+---
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+As of right now some things are still janky/hard coded:
+
+- Notes are stored in `/storage/emulated/0/Sync/Notes/`
+- Storage access permission needs to be granted manually through the settings app
