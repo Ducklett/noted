@@ -14,6 +14,8 @@ class NotePad extends StatefulWidget {
 
 class _NotePadState extends State<NotePad> {
   final String path;
+  String tag;
+
   bool _deleted = false;
   TextEditingController txt = TextEditingController(text: "");
   TextEditingController title = TextEditingController(text: "");
@@ -54,7 +56,9 @@ class _NotePadState extends State<NotePad> {
         fontSize: 16.0);
   }
 
-  _NotePadState(this.path);
+  _NotePadState(this.path) {
+    tag = getBaseName(path).split('.').first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,18 +124,24 @@ class _NotePadState extends State<NotePad> {
           ],
         ),
         body: Container(
-          child: TextField(
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.all(16),
-              border: InputBorder.none,
+          child: Hero(
+            tag: tag,
+            child: Material(
+              color: Colors.transparent,
+              child: TextField(
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.all(16),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyText2.color,
+                  fontSize: 18.0,
+                ),
+                autocorrect: false,
+                controller: txt,
+                maxLines: 999,
+              ),
             ),
-            style: TextStyle(
-              color: Theme.of(context).textTheme.bodyText2.color,
-              fontSize: 18.0,
-            ),
-            autocorrect: false,
-            controller: txt,
-            maxLines: 999,
           ),
         ),
       ),

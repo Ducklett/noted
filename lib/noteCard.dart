@@ -37,7 +37,13 @@ class NoteCard extends StatelessWidget {
                       title: Text(note.title),
                       subtitle: Text(note.updated.toString()),
                     ),
-                    Text(note.body),
+                    Hero(
+                      tag: note.title,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Text(note.body),
+                      ),
+                    ),
                   ],
                 ),
               )),
