@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
       title: 'Noted',
       theme: makeTheme(ColorScheme()),
       darkTheme: makeTheme(ColorSchemeDark()),
-      home: NoteList(),
+      home: NotesScreen(),
     );
   }
 }

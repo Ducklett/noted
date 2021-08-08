@@ -4,60 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_file_utils/utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class NotePad extends StatefulWidget {
+class NoteEditScreen extends StatefulWidget {
   final String path;
-  NotePad(this.path);
+  NoteEditScreen(this.path);
 
   @override
-  _NotePadState createState() => _NotePadState(path);
+  _NoteEditScreenState createState() => _NoteEditScreenState(path);
 }
 
-class _NotePadState extends State<NotePad> {
+class _NoteEditScreenState extends State<NoteEditScreen> {
   final String path;
-  String tag;
+  late final String oldText;
+  late String tag;
 
   bool _deleted = false;
   TextEditingController txt = TextEditingController(text: "");
   TextEditingController title = TextEditingController(text: "");
 
+  _NoteEditScreenState(this.path) {
+    tag = getBaseName(path).split('.').first;
+  }
+
   @override
   void initState() {
     File f = File(path);
-    txt.text = f.readAsStringSync();
+    oldText = f.readAsStringSync();
+    txt.text = oldText;
     title.text = getBaseName(path).split('.').first;
     print(title.text);
     super.initState();
-  }
-
-  void _saveNote() {
-    if (_deleted) return;
-
-    var f = File(path);
-    var dir = f.parent.path;
-    var newfilename = title.text + ".txt";
-    var oldFilename = getBaseName(path);
-
-    if (newfilename != oldFilename) {
-      f.deleteSync();
-    }
-
-    var newPath = dir + "/" + newfilename;
-    print("Save note in " + newPath);
-
-    var newFile = File(newPath);
-    newFile.createSync();
-    newFile.writeAsStringSync(txt.text);
-
-    Fluttertoast.showToast(
-        msg: "Note saved",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        fontSize: 16.0);
-  }
-
-  _NotePadState(this.path) {
-    tag = getBaseName(path).split('.').first;
   }
 
   @override
@@ -82,7 +57,7 @@ class _NotePadState extends State<NotePad> {
             MaterialButton(
               child: Icon(
                 Icons.delete,
-                color: Theme.of(context).appBarTheme.iconTheme.color,
+                color: Theme.of(context).appBarTheme.iconTheme!.color,
               ),
               onPressed: () {
                 var dialog = AlertDialog(
@@ -90,13 +65,13 @@ class _NotePadState extends State<NotePad> {
                       title.text +
                       "\"?"),
                   actions: [
-                    FlatButton(
+                    TextButton(
                       child: Text("No"),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text("Yes"),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -134,7 +109,7 @@ class _NotePadState extends State<NotePad> {
                   border: InputBorder.none,
                 ),
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyText2.color,
+                  color: Theme.of(context).textTheme.bodyText2!.color,
                   fontSize: 18.0,
                 ),
                 autocorrect: false,
@@ -146,5 +121,36 @@ class _NotePadState extends State<NotePad> {
         ),
       ),
     );
+  }
+
+  void _saveNote() {
+    if (_deleted) return;
+    if (oldText == txt.text) {
+      print("text didn't change, won't save");
+      return;
+    }
+
+    var f = File(path);
+    var dir = f.parent.path;
+    var newfilename = title.text + ".txt";
+    var oldFilename = getBaseName(path);
+
+    if (newfilename != oldFilename) {
+      f.deleteSync();
+    }
+
+    var newPath = dir + "/" + newfilename;
+    print("Save note in " + newPath);
+
+    var newFile = File(newPath);
+    newFile.createSync();
+    newFile.writeAsStringSync(txt.text);
+
+    Fluttertoast.showToast(
+        msg: "Note saved",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        fontSize: 16.0);
   }
 }
